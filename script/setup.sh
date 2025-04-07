@@ -1,11 +1,12 @@
 #!/bin/bash
 
 # * set environment variables
-VPN_NAME=${VPN_NAME:-INTERNAL.EXAMPLE.COM}
+VPN_NAME=${VPN_NAME:-internal.example.com}
 VPN_IPSEC_PSK=${VPN_IPSEC_PSK:-0032}
 VPN_DNS_SRV1=${VPN_DNS_SRV1:-10.2.1.1}
 VPN_DNS_SRV2=${VPN_DNS_SRV2:-1.1.1.1}
 VPN_POOL=${VPN_POOL:-10.2.231.0/24}
+VPN_INTERNAL_SUBNET=${VPN_INTERNAL_SUBNET:-10.2.230.0/24}
 CERT_DB=${CERT_DB:-sql:/etc/ipsec.d}
 CA_NAME=${CA_NAME:-"IKEv2 VPN CA"}
 
@@ -271,7 +272,7 @@ conn ikev2-cp
   left=%defaultroute
   leftcert=$VPN_NAME
   leftsendcert=always
-  leftsubnet=0.0.0.0/0
+  leftsubnet=$VPN_INTERNAL_SUBNET
   leftrsasigkey=%cert
   right=%any
   rightid=%fromcert
