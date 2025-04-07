@@ -17,8 +17,24 @@ export VPN_POOL="10.2.231.0/24"
 export VPN_INTERNAL_SUBNET="10.2.230.0/24"
 export CERT_DB="sql:/etc/ipsec.d"
 export CA_NAME="Example VPN"
-
 curl -fsSL https://raw.githubusercontent.com/connectedtechco/ipsec/refs/heads/main/script/setup.sh | bash -
+```
+
+#### Add user
+
+Installing command (first time only)
+
+```bash
+curl -o /usr/bin/addvpnuser https://raw.githubusercontent.com/connectedtechco/ipsec/refs/heads/main/script/user.sh
+chmod +x /usr/bin/addvpnuser
+```
+
+```bash
+export VPN_NAME="internal.example.com"
+export CA_NAME="Example VPN"
+export EXPORT_DIR="/etc/ipsec.d/cert/"
+export VPN_ONDEMAND_DOMAINS="example.com,*.example.com"
+addvpnuser bsthun --force
 ```
 
 ## Credit

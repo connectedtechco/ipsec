@@ -12,11 +12,9 @@ fi
 
 # * set environment variables (all uppercase now)
 VPN_NAME=${VPN_NAME:-internal.example.com}
-VPN_DNS_SRV1=${VPN_DNS_SRV1:-10.2.1.1}
-VPN_DNS_SRV2=${VPN_DNS_SRV2:-1.1.1.1}
 CERT_DB=${CERT_DB:-sql:/etc/ipsec.d}
 CA_NAME=${CA_NAME:-"IKEv2 VPN CA"}
-EXPORT_DIR=${EXPORT_DIR:-/etc/ipsec.d/certs/}
+EXPORT_DIR=${EXPORT_DIR:-/etc/ipsec.d/cert/}
 CLIENT_NAME="$1"
 FORCE_MODE=false
 
@@ -28,10 +26,9 @@ if [ "$2" = "--force" ]; then
   FORCE_MODE=true
 fi
 
-# * OnDemand domains from environment variable with colon separator
-VPN_ONDEMAND_DOMAINS=${VPN_ONDEMAND_DOMAINS:-"connectedtech.dev:*.connectedtech.dev"}
-# Convert colon-separated string to array
-IFS=':' read -r -a DOMAIN_ARRAY <<< "$VPN_ONDEMAND_DOMAINS"
+# * ondemand domains
+VPN_ONDEMAND_DOMAINS=${VPN_ONDEMAND_DOMAINS:-"example.com,*.example.com"}
+IFS=',' read -r -a DOMAIN_ARRAY <<< "$VPN_ONDEMAND_DOMAINS"
 
 # * validate client name
 if [ "${#CLIENT_NAME}" -gt "64" ] || echo "$CLIENT_NAME" | LC_ALL=C grep -q '[^A-Za-z0-9_-]\+' \
@@ -92,6 +89,7 @@ fi
 
 # * export p12 file
 echo "## Creating client configuration files..."
+mkdir -p "$EXPORT_DIR" || exit 1
 P12_FILE="$EXPORT_DIR$CLIENT_NAME.p12"
 P12_FILE_ENC="$EXPORT_DIR$CLIENT_NAME.enc.p12"
 pk12util -W "$P12_PASSWORD" -d "$CERT_DB" -n "$CLIENT_NAME" -o "$P12_FILE_ENC" >/dev/null || exit 1
