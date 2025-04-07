@@ -204,7 +204,7 @@ fi
 mkdir -p /etc/network/if-pre-up.d
 cat > /etc/network/if-pre-up.d/iptablesload <<'EOF'
 #!/bin/sh
-iptables-restore < /etc/ipsec.rules
+iptables-restore < /etc/iptables.rules
 exit 0
 EOF
 chmod +x /etc/network/if-pre-up.d/iptablesload
